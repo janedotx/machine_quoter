@@ -39,7 +39,7 @@ class Edge
   end
 
   def find_length(vertices_hash)
-    @length ||= if @center
+    @length ||= if circular
         find_arc_length
       else
         get_distance(vertices_hash[vertices[0]], vertices_hash[vertices[1]])

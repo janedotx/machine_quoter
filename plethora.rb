@@ -134,9 +134,6 @@ class Shape
       end
 
       if edge.convex
-      puts 'edge convex?'
-      puts edge.center
-      puts edge.concave
         x_coords << edge.negative_x
         x_coords << edge.positive_x
         y_coords << edge.negative_y
@@ -164,9 +161,6 @@ class Shape
 
   def get_materials_cost
     x, y = get_bounding_box_dimensions
-    puts 'getting costs'
-    puts x
-    puts y
     (x + KERF_PADDING) * (y + KERF_PADDING) * MATERIAL_COST
   end
 
