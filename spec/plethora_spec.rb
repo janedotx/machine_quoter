@@ -68,12 +68,23 @@ describe Shape do
       extruded_circle.edges['8419032'].concave.should be_false
     end
   end
-end
 
-describe 'stuff' do
-  it 'pythagorases' do
-    p1 = Vertex.new( 0, 0)
-    p2 = Vertex.new(1, 1)
-    get_distance_between(p1, p2).should eq Math.sqrt(2)
+  describe '.get_bounding_box_dimensions' do
+    it 'should get the correct dimensions of the stock rectangle that fully encloses the shape' do
+      cut_circle.connect_edges
+      circle_x, circle_y = cut_circle.get_bounding_box_dimensions
+      circle_x.should eq 2.0
+      circle_y.should eq 1.0
+
+      rectangle.connect_edges
+      rectangle_x, rectangle_y = rectangle.get_bounding_box_dimensions
+      rectangle_x.should eq 5.0
+      rectangle_y.should eq 3.0
+
+      extruded_circle.connect_edges
+      extruded_circle_x, extruded_circle_y = extruded_circle.get_bounding_box_dimensions
+      extruded_circle_x.should eq 2.5
+      extruded_circle_y.should eq 1.0
+    end
   end
 end

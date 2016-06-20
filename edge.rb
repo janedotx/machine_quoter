@@ -17,6 +17,10 @@ class Edge
     !@center.nil?
   end
 
+  def convex
+    center && !concave 
+  end
+
   def find_farthest_points(vertices_hash)
     v_id = vertices.first
     radius = get_distance(vertices_hash[v_id], center)

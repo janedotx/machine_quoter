@@ -32,6 +32,7 @@ class Shape
     return edges
   end
 
+  # Create a hash where the keys are the ids and the values are Edge instances.
   def get_edges
     edges = {}
     @schema['Edges'].each do |raw_edge|
@@ -124,19 +125,63 @@ class Shape
     current_edge.next = @first_edge_id
   end
 
-  # putting in the simplifying assumption
+  # Obviously this doesn't come close to covering all the kinds of shapes that could be requisitioned. I went with this because
+  # it vaguely captures the idea that to move clockwise, you have to move 'up' and 'left' of the side of the clock, and it works
+  # well enough if you know you're starting at the origin.
   def get_clockwise_neighbor(id_1, id_2)
-    return id_1 if @vertices[id_1].x < 0
-    return id_2 if @vertices[id_2].x < 0
-    return id_1 if @vertices[id_1].x == 0 && @vertices[id_1].y > 0
-    return id_2 if @vertices[id_2].x == 0 && @vertices[id_2].y > 0
-    raise 'the limitations of the clockwise-finding logic have been reached'
+    return id_1 if @vertices[id_1].y > @vertices[id_2].y
+    return id_1 if @vertices[id_1].x < @vertices[id_2].x
+    return id_2
+  end
+
+  def get_materials_cost
+  end
+
+  def get_bounding_box_dimensions
+    min_x = 0.0
+    min_y = 0
+
+    max_x = 0
+    max_y = 0
+
+    @edges.each_pair do |id, edge|
+      x_coords = []
+      y_coords = []
+      vertices = edge.vertices.map { |v| @vertices[v] }
+      ap vertices
+      vertices.each do |v|
+        x_coords << v.x
+        y_coords << v.y
+      end
+      if edge.convex
+        x_coords << edge.negative_x
+        x_coords << edge.positive_x
+        y_coords << edge.negative_y
+        y_coords << edge.positive_y
+      end
+      puts 'xs'
+      ap x_coords
+      puts x_coords.min
+
+      if x_coords.min < min_x
+        min_x = x_coords.min
+      end
+      if x_coords.max > max_x
+        max_x = x_coords.max
+      end
+
+      if y_coords.min < min_y
+        min_y = y_coords.min
+      end
+      if y_coords.max > max_y
+        max_y = y_coords.max
+      end
+    end
+    [max_x - min_x, max_y - min_y]
   end
 
 end
 
-def cross_product(v1, v2, v3)
-end
 # "ap
 # "bp
 def get_distance_between(p1, p2)
