@@ -6,8 +6,8 @@ class Shape
   V_MAX = 0.5
   MATERIAL_COST = 0.75
   TIME_COST = 0.07
+  KERF_PADDING = 0.1
 
-  attr_reader :schema
   attr_reader :edges
   attr_reader :vertices
 
@@ -134,9 +134,6 @@ class Shape
     return id_2
   end
 
-  def get_materials_cost
-  end
-
   def get_bounding_box_dimensions
     min_x = 0.0
     min_y = 0
@@ -148,7 +145,7 @@ class Shape
       x_coords = []
       y_coords = []
       vertices = edge.vertices.map { |v| @vertices[v] }
-      ap vertices
+
       vertices.each do |v|
         x_coords << v.x
         y_coords << v.y
@@ -159,9 +156,6 @@ class Shape
         y_coords << edge.negative_y
         y_coords << edge.positive_y
       end
-      puts 'xs'
-      ap x_coords
-      puts x_coords.min
 
       if x_coords.min < min_x
         min_x = x_coords.min
@@ -180,11 +174,33 @@ class Shape
     [max_x - min_x, max_y - min_y]
   end
 
-end
+  def get_materials_cost
+    x, y = get_bounding_box_dimensions
+    (x + KERF_PADDING) * (y + KERF_PADDING) * MATERIAL_COST
+  end
 
-# "ap
-# "bp
-def get_distance_between(p1, p2)
-  Math.sqrt((p2.x - p1.x)**2 + (p2.y - p1.y)**2)
-end
+  def arc_laser_speed(radius)
+    V_MAX * (Math.exp(-1/radius))
+  end
 
+  def get_laser_cutting_cost
+    cost = 0.0
+    @edges.each_value do |edge|
+      edge.find_length(@vertices)
+      puts 'length'
+      puts edge.length
+      puts 'circular?'
+      puts edge.circular
+      if edge.circular
+        cost += (edge.length / arc_laser_speed(edge.radius)) * TIME_COST
+      else
+        cost += (edge.length / V_MAX) * TIME_COST
+      end
+    end
+    cost
+  end
+
+  def get_total_costs
+    (get_materials_cost + get_laser_cutting_cost).round(2)
+  end
+end

@@ -87,4 +87,27 @@ describe Shape do
       extruded_circle_y.should eq 1.0
     end
   end
+
+  describe '.get_materials_cost' do
+    it 'should accurately calculate the cost of the materials' do
+      cut_circle.connect_edges
+      cut_circle.get_materials_cost.round(2).should eq 1.73
+
+      rectangle.connect_edges
+      rectangle.get_materials_cost.round(2).should eq 11.86
+
+      extruded_circle.connect_edges
+      extruded_circle.get_materials_cost.round(2).should eq 2.15
+    end
+  end
+
+  describe '.get_total_costs' do
+    it 'should calculate the cost of machining a piece' do
+      extruded_circle.connect_edges
+      puts extruded_circle.get_total_costs
+
+      rectangle.connect_edges
+      puts rectangle.get_total_costs
+    end
+  end
 end

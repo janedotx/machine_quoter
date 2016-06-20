@@ -1,5 +1,5 @@
 class Edge
-  attr_reader :center, :vertices, :clockwise_vertex_id
+  attr_reader :center, :vertices, :clockwise_vertex_id, :radius, :length
   attr_accessor :next
   attr_accessor :concave
   attr_reader :positive_x, :negative_x, :positive_y, :negative_y
@@ -21,9 +21,13 @@ class Edge
     center && !concave 
   end
 
-  def find_farthest_points(vertices_hash)
+  def find_radius(vertices_hash)
     v_id = vertices.first
-    radius = get_distance(vertices_hash[v_id], center)
+    @radius = get_distance(vertices_hash[v_id], center)
+  end
+
+  def find_farthest_points(vertices_hash)
+    find_radius(vertices_hash)
     @positive_x = center.x + radius
     @positive_y = center.y + radius
     @negative_x = center.x - radius
@@ -34,11 +38,16 @@ class Edge
     Math.sqrt((p2.x - p1.x)**2 + (p2.y - p1.y)**2)
   end
 
-  def length
-    @length ||= if @circular
-        arc_length
+  def find_arc_length
+    raise 'no radius yet' unless @radius
+    3.14159 * @radius
+  end
+
+  def find_length(vertices_hash)
+    @length ||= if @center
+        find_arc_length
       else
-        get_distance(*vertices)
+        get_distance(vertices_hash[vertices[0]], vertices_hash[vertices[1]])
       end
   end
 

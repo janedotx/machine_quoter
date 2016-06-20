@@ -45,5 +45,19 @@ describe Edge do
     end
   end
 
+  describe '.find_radius' do
+    it 'should find the radius' do
+      arc.find_radius(vertices_hash).should eq 1.5
+    end
+  end
+
+  describe '.find_length' do
+    it 'should return the correct length' do
+      straight_edge.find_length(vertices_hash).should eq 3.0
+      arc.find_radius(vertices_hash)
+      arc.find_length(vertices_hash).round(2).should eq 4.71
+    end
+  end
+
 end
 
