@@ -10,7 +10,7 @@
           "X": 2.0,
           "Y": 2.0
         },
-        "ClockwiseFrom": 2
+        "ClockwiseFrom": 1
     },
       "21": {
         "Type": "LineSegment",
@@ -29,7 +29,7 @@
           "X": 4.0,
           "Y": 2.0
         },
-        "ClockwiseFrom": 2
+        "ClockwiseFrom": 3
       },
       "23": {
         "Type": "LineSegment",

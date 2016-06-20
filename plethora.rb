@@ -76,31 +76,30 @@ class Shape
   def process_edges
     # Assume that one point will always be at the origin. The points can always be translated in such a way that this is true,
     # so it's a reasonable simplifying assumption.
-    @origin = find_origin
-    next_vertex_id = get_clockwise_neighbor(*get_neighboring_vertices(@origin))
-    current_edge_id = find_edge_by_vertices(@origin, next_vertex_id)
+    current_vertex_id = find_origin
+    next_vertex_id = get_clockwise_neighbor(*get_neighboring_vertices(current_vertex_id))
+    current_edge_id = find_edge_by_vertices(current_vertex_id, next_vertex_id)
 
-    # Set the current vertex to be the leading vertex of the current edge we're on.
-    current_vertex_id = next_vertex_id
+    # Set the current vertex to be the lagging vertex of the current edge we're on.
     current_edge = @edges[current_edge_id]
-    @first_edge_id = current_edge_id
 
-    (@edges.size - 1).times do
-      next_edge_id = get_other_edge(current_vertex_id, current_edge_id)
-      next_edge = @edges[next_edge_id]
+    (@edges.size).times do
+      if current_edge.circular
+        current_edge.set_radius(@vertices)
 
-      # We are advancing clockwise. If a curve is anti-clockwise, then the curve is concave. Intuitively, a concave angle is
-      # created when the path 'reverses direction.'
-      if next_edge.circular
-        next_edge.set_radius(@vertices)
-
-        if current_vertex_id == next_edge.clockwise_vertex_id
-          next_edge.concave = false
-          next_edge.find_farthest_points(@vertices)
+        # We are advancing clockwise. If a curve is anti-clockwise, then the curve is concave. Intuitively, a concave angle is
+        # created when the path 'reverses direction.'
+        if current_vertex_id == current_edge.clockwise_vertex_id
+          current_edge.concave = false
+          current_edge.convex = true
+          current_edge.find_farthest_points(@vertices)
         else
-          next_edge.concave = true
+          current_edge.concave = true
+          current_edge.convex = false
         end
       end
+      next_edge_id = get_other_edge(current_vertex_id, current_edge_id)
+      next_edge = @edges[next_edge_id]
 
       current_edge_id = next_edge_id
       current_edge = @edges[current_edge_id]
@@ -133,13 +132,18 @@ class Shape
         x_coords << v.x
         y_coords << v.y
       end
-      puts edge.inspect
+
       if edge.convex
+      puts 'edge convex?'
+      puts edge.center
+      puts edge.concave
         x_coords << edge.negative_x
         x_coords << edge.positive_x
         y_coords << edge.negative_y
         y_coords << edge.positive_y
       end
+      ap x_coords
+      ap y_coords
 
       if x_coords.min < min_x
         min_x = x_coords.min
@@ -160,6 +164,9 @@ class Shape
 
   def get_materials_cost
     x, y = get_bounding_box_dimensions
+    puts 'getting costs'
+    puts x
+    puts y
     (x + KERF_PADDING) * (y + KERF_PADDING) * MATERIAL_COST
   end
 

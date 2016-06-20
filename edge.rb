@@ -1,7 +1,7 @@
 class Edge
   attr_reader :center, :vertices, :clockwise_vertex_id, :length, :radius
   attr_accessor :next
-  attr_accessor :concave
+  attr_accessor :concave, :convex
   attr_reader :positive_x, :negative_x, :positive_y, :negative_y
 
   def initialize(edge_hash)
@@ -15,10 +15,6 @@ class Edge
 
   def circular
     !@center.nil?
-  end
-
-  def convex
-    center && !concave 
   end
 
   def set_radius(vertices_hash)

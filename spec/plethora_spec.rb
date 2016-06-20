@@ -88,6 +88,8 @@ describe Shape do
 
       extruded_circle.process_edges
       extruded_circle.get_materials_cost.round(2).should eq 2.15
+      vase.process_edges
+      vase.get_materials_cost.round(2).should eq 18.76
     end
   end
 
@@ -99,11 +101,8 @@ describe Shape do
       rectangle.process_edges
       rectangle.get_laser_cutting_cost.round(2).should eq 2.24
 
-      extruded_circle.process_edges
-      extruded_circle.get_materials_cost.round(2).should eq 2.15
-
-      #vase.process_edges
-      #vase.get_materials_cost.round(2).should eq 18.76
+      vase.process_edges
+      vase.get_laser_cutting_cost.round(2).should eq 70.0
     end
   end
 
@@ -112,6 +111,7 @@ describe Shape do
       extruded_circle.get_total_costs.should eq 4.47
       cut_circle.get_total_costs.should eq 4.06
       rectangle.get_total_costs.should eq 14.1
+      vase.get_total_costs.should eq 88.76
     end
   end
 end
