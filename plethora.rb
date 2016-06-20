@@ -94,21 +94,6 @@ class Shape
       if next_edge.circular
         next_edge.set_radius(@vertices)
 
-=begin
-      puts 'circle time'
-        puts "current edge " + current_edge_id.to_s
-        puts 'cur edge point 1'
-        puts vertices[current_edge.vertices[0]]
-        puts 'cur edge point 2'
-        puts vertices[current_edge.vertices[1]]
-      puts 'current vertex ' + current_vertex_id
-      puts @vertices[current_vertex_id]
-      puts "next edge id: #{next_edge_id}"
-      puts "clockwise: #{next_edge.clockwise_vertex_id}"
-      puts 'current edge get oter vertex ' + current_edge.get_other_vertex(current_vertex_id).to_s
-        ap vertices
-        puts 'at circular edge'
-=end
         if current_vertex_id == next_edge.clockwise_vertex_id
           next_edge.concave = false
           next_edge.find_farthest_points(@vertices)
