@@ -6,4 +6,5 @@ module Fixtures
   RECTANGLE_FILE = fixture('rectangle.json')
   CUT_CIRCLE_FILE = fixture('cut_circular_arc.json')
   EXTRUDED_CIRCLE_FILE = fixture('extruded_circular_arc.json')
+  VASE_FILE = fixture('vase.json')
 end

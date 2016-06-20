@@ -6,6 +6,7 @@ describe Shape do
   let(:rectangle) { described_class.new(Fixtures::RECTANGLE_FILE) }
   let(:cut_circle) { described_class.new(Fixtures::CUT_CIRCLE_FILE) }
   let(:extruded_circle) { described_class.new(Fixtures::EXTRUDED_CIRCLE_FILE) }
+  let(:vase) { described_class.new(Fixtures::VASE_FILE) }
 
   describe '.initialize' do
 
@@ -43,45 +44,34 @@ describe Shape do
     end
   end
 
-  describe '.connect_edges' do
-    it 'should create a linked list of edges such that those edges are traversed in clockwise order' do
-      rectangle.connect_edges
-      rectangle.edges['33476626'].next.should eq '43942917'
-      rectangle.edges['43942917'].next.should eq '2606490'
-      rectangle.edges['2606490'].next.should eq '9799115'
-      rectangle.edges['9799115'].next.should eq '33476626'
-
-      cut_circle.connect_edges
-      cut_circle.edges['20'].next.should eq '21'
-      cut_circle.edges['21'].next.should eq '22'
-      cut_circle.edges['22'].next.should eq '23'
-      cut_circle.edges['23'].next.should eq '20'
-    end
-
-    it 'should mark concave and convex edges properly' do
-      cut_circle.connect_edges
+  describe '.process_edges' do
+    it 'should mark concave and convex edges properly, and also set the radius for any circular edges' do
+      cut_circle.process_edges
       cut_circle.edges['22'].concave.should be_true
-      ap cut_circle.edges
+      cut_circle.edges['22'].radius.should eq 0.5
 
-      extruded_circle.connect_edges
-      ap extruded_circle.edges
+      extruded_circle.process_edges
       extruded_circle.edges['8419032'].concave.should be_false
+      extruded_circle.edges['8419032'].radius.should eq 0.5
+
+      rectangle.process_edges
+      rectangle.edges['33476626'].concave.should be_false
     end
   end
 
   describe '.get_bounding_box_dimensions' do
     it 'should get the correct dimensions of the stock rectangle that fully encloses the shape' do
-      cut_circle.connect_edges
+      cut_circle.process_edges
       circle_x, circle_y = cut_circle.get_bounding_box_dimensions
       circle_x.should eq 2.0
       circle_y.should eq 1.0
 
-      rectangle.connect_edges
+      rectangle.process_edges
       rectangle_x, rectangle_y = rectangle.get_bounding_box_dimensions
       rectangle_x.should eq 5.0
       rectangle_y.should eq 3.0
 
-      extruded_circle.connect_edges
+      extruded_circle.process_edges
       extruded_circle_x, extruded_circle_y = extruded_circle.get_bounding_box_dimensions
       extruded_circle_x.should eq 2.5
       extruded_circle_y.should eq 1.0
@@ -90,24 +80,38 @@ describe Shape do
 
   describe '.get_materials_cost' do
     it 'should accurately calculate the cost of the materials' do
-      cut_circle.connect_edges
+      cut_circle.process_edges
       cut_circle.get_materials_cost.round(2).should eq 1.73
 
-      rectangle.connect_edges
+      rectangle.process_edges
       rectangle.get_materials_cost.round(2).should eq 11.86
 
-      extruded_circle.connect_edges
+      extruded_circle.process_edges
       extruded_circle.get_materials_cost.round(2).should eq 2.15
+    end
+  end
+
+  describe '.get_laser_cutting_cost' do
+    it 'should accurately calculate the laser cutting cost' do
+      cut_circle.process_edges
+      cut_circle.get_laser_cutting_cost.round(2).should eq 2.32
+
+      rectangle.process_edges
+      rectangle.get_laser_cutting_cost.round(2).should eq 2.24
+
+      extruded_circle.process_edges
+      extruded_circle.get_materials_cost.round(2).should eq 2.15
+
+      #vase.process_edges
+      #vase.get_materials_cost.round(2).should eq 18.76
     end
   end
 
   describe '.get_total_costs' do
     it 'should calculate the cost of machining a piece' do
-      extruded_circle.connect_edges
-      puts extruded_circle.get_total_costs
-
-      rectangle.connect_edges
-      puts rectangle.get_total_costs
+      extruded_circle.get_total_costs.should eq 4.47
+      cut_circle.get_total_costs.should eq 4.06
+      rectangle.get_total_costs.should eq 14.1
     end
   end
 end

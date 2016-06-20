@@ -30,13 +30,13 @@ describe Edge do
       arc.vertices.should eq ['2', '3']
       arc.circular.should be_true
       arc.clockwise_vertex_id.should eq '3'
-      puts arc.center.inspect
       arc.center.should eq Vertex.new(3.0, 1.5)
     end
   end
 
   describe '.find_farthest_points' do
     it 'should calculate the coordinates farthest away from the center' do
+      arc.set_radius(vertices_hash)
       arc.find_farthest_points(vertices_hash)
       arc.positive_x.should eq 4.5
       arc.negative_x.should eq 1.5
@@ -45,16 +45,16 @@ describe Edge do
     end
   end
 
-  describe '.find_radius' do
-    it 'should find the radius' do
-      arc.find_radius(vertices_hash).should eq 1.5
+  describe '.set_radius' do
+    it 'should calculate the radius' do
+      arc.set_radius(vertices_hash).should eq 1.5
     end
   end
 
   describe '.find_length' do
     it 'should return the correct length' do
       straight_edge.find_length(vertices_hash).should eq 3.0
-      arc.find_radius(vertices_hash)
+      arc.set_radius(vertices_hash)
       arc.find_length(vertices_hash).round(2).should eq 4.71
     end
   end

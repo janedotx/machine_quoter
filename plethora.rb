@@ -73,7 +73,7 @@ class Shape
     (find_edges_by_vertex(v_id) - [edge_id])[0]
   end
 
-  def connect_edges
+  def process_edges
     # Assume that one point will always be at the origin. The points can always be translated in such a way that this is true,
     # so it's a reasonable simplifying assumption.
     @origin = find_origin
@@ -85,12 +85,14 @@ class Shape
     current_edge = @edges[current_edge_id]
     @first_edge_id = current_edge_id
 
-    # Get the next edge and next vertex, linking the current edge to the next edge as we advance clockwise.
     (@edges.size - 1).times do
       next_edge_id = get_other_edge(current_vertex_id, current_edge_id)
       next_edge = @edges[next_edge_id]
 
+      # We are advancing clockwise. If a curve is anti-clockwise, then the curve is concave. Intuitively, a concave angle is
+      # created when the path 'reverses direction.'
       if next_edge.circular
+        next_edge.set_radius(@vertices)
 
 =begin
       puts 'circle time'
@@ -115,14 +117,10 @@ class Shape
         end
       end
 
-      current_edge.next = next_edge_id
       current_edge_id = next_edge_id
       current_edge = @edges[current_edge_id]
       current_vertex_id = current_edge.get_other_vertex(current_vertex_id)
     end
-
-    # close the loop
-    current_edge.next = @first_edge_id
   end
 
   # Obviously this doesn't come close to covering all the kinds of shapes that could be requisitioned. I went with this because
@@ -150,6 +148,7 @@ class Shape
         x_coords << v.x
         y_coords << v.y
       end
+      puts edge.inspect
       if edge.convex
         x_coords << edge.negative_x
         x_coords << edge.positive_x
@@ -187,10 +186,6 @@ class Shape
     cost = 0.0
     @edges.each_value do |edge|
       edge.find_length(@vertices)
-      puts 'length'
-      puts edge.length
-      puts 'circular?'
-      puts edge.circular
       if edge.circular
         cost += (edge.length / arc_laser_speed(edge.radius)) * TIME_COST
       else
@@ -201,6 +196,7 @@ class Shape
   end
 
   def get_total_costs
+    process_edges
     (get_materials_cost + get_laser_cutting_cost).round(2)
   end
 end
