@@ -25,6 +25,7 @@ class Edge
   def find_farthest_points(vertices_hash)
     @positive_x = center.x + radius
     @positive_y = center.y + radius
+    # In case the convexity is pointing down the negative direction of the x or y axis.
     @negative_x = center.x - radius
     @negative_y = center.y - radius
   end
