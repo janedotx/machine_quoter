@@ -5,6 +5,7 @@ require './plethora'
 describe Shape do
   let(:rectangle) { described_class.new(Fixtures::RECTANGLE_FILE) }
   let(:cut_circle) { described_class.new(Fixtures::CUT_CIRCLE_FILE) }
+  let(:extruded_circle) { described_class.new(Fixtures::EXTRUDED_CIRCLE_FILE) }
 
   describe '.initialize' do
 
@@ -51,10 +52,20 @@ describe Shape do
       rectangle.edges['9799115'].next.should eq '33476626'
 
       cut_circle.connect_edges
-      cut_circle.edges['53330552'].next.should eq '32368095'
-      cut_circle.edges['32368095'].next.should eq '21940722'
-      cut_circle.edges['21940722'].next.should eq '24807479'
-      cut_circle.edges['24807479'].next.should eq '53330552'
+      cut_circle.edges['20'].next.should eq '21'
+      cut_circle.edges['21'].next.should eq '22'
+      cut_circle.edges['22'].next.should eq '23'
+      cut_circle.edges['23'].next.should eq '20'
+    end
+
+    it 'should mark concave and convex edges properly' do
+      cut_circle.connect_edges
+      cut_circle.edges['22'].concave.should be_true
+      ap cut_circle.edges
+
+      extruded_circle.connect_edges
+      ap extruded_circle.edges
+      extruded_circle.edges['8419032'].concave.should be_false
     end
   end
 end

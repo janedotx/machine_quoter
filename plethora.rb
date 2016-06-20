@@ -12,9 +12,6 @@ class Shape
   attr_reader :vertices
 
   def initialize(file)
-    @edges = {}
-    @vertices = {}
-
     @schema = JSON.parse(File.read(file))
     @vertices = get_vertices
     @edges = get_edges
@@ -79,19 +76,48 @@ class Shape
     # Assume that one point will always be at the origin. The points can always be translated in such a way that this is true,
     # so it's a reasonable simplifying assumption.
     @origin = find_origin
-    next_vertex = get_clockwise_neighbor(*get_neighboring_vertices(@origin))
-    current_edge_id = find_edge_by_vertices(@origin, next_vertex)
-    current_vertex = next_vertex
+    next_vertex_id = get_clockwise_neighbor(*get_neighboring_vertices(@origin))
+    current_edge_id = find_edge_by_vertices(@origin, next_vertex_id)
+
+    # Set the current vertex to be the leading vertex of the current edge we're on.
+    current_vertex_id = next_vertex_id
     current_edge = @edges[current_edge_id]
     @first_edge_id = current_edge_id
 
     # Get the next edge and next vertex, linking the current edge to the next edge as we advance clockwise.
     (@edges.size - 1).times do
-      next_edge_id = get_other_edge(current_vertex, current_edge_id)
+      next_edge_id = get_other_edge(current_vertex_id, current_edge_id)
+      next_edge = @edges[next_edge_id]
+
+      if next_edge.circular
+
+=begin
+      puts 'circle time'
+        puts "current edge " + current_edge_id.to_s
+        puts 'cur edge point 1'
+        puts vertices[current_edge.vertices[0]]
+        puts 'cur edge point 2'
+        puts vertices[current_edge.vertices[1]]
+      puts 'current vertex ' + current_vertex_id
+      puts @vertices[current_vertex_id]
+      puts "next edge id: #{next_edge_id}"
+      puts "clockwise: #{next_edge.clockwise_vertex_id}"
+      puts 'current edge get oter vertex ' + current_edge.get_other_vertex(current_vertex_id).to_s
+        ap vertices
+        puts 'at circular edge'
+=end
+        if current_vertex_id == next_edge.clockwise_vertex_id
+          next_edge.concave = false
+          next_edge.find_farthest_points(@vertices)
+        else
+          next_edge.concave = true
+        end
+      end
+
       current_edge.next = next_edge_id
       current_edge_id = next_edge_id
       current_edge = @edges[current_edge_id]
-      current_vertex = current_edge.get_other_vertex(current_vertex)
+      current_vertex_id = current_edge.get_other_vertex(current_vertex_id)
     end
 
     # close the loop

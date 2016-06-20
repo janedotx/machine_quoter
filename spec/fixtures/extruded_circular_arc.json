@@ -1,58 +1,63 @@
 {
   "Edges": {
-    "33476626": {
+    "5903470": {
       "Type": "LineSegment",
-        "Vertices": [
-          32854180,
-        27252167
-          ]
+      "Vertices": [
+        1,
+        4
+      ]
     },
-      "43942917": {
-        "Type": "LineSegment",
-        "Vertices": [
-          27252167,
-        59941933
-          ]
+    "8419032": {
+      "Type": "CircularArc",
+      "Vertices": [
+        4,
+        3
+      ],
+      "Center": {
+        "X": 2.0,
+        "Y": 0.5
       },
-      "2606490": {
-        "Type": "LineSegment",
-        "Vertices": [
-          59941933,
-        23458411
-          ]
-      },
-      "9799115": {
-        "Type": "LineSegment",
-        "Vertices": [
-          23458411,
-        32854180
-          ]
-      }
+      "ClockwiseFrom": 3
+    },
+    "8662426": {
+      "Type": "LineSegment",
+      "Vertices": [
+        3,
+        2
+      ]
+    },
+    "30567910": {
+      "Type": "LineSegment",
+      "Vertices": [
+        2,
+        1
+      ]
+    }
   },
-    "Vertices": {
-      "32854180": {
-        "Position": {
-          "X": 0.0,
-          "Y": 0.0
-        }
-      },
-      "27252167": {
-        "Position": {
-          "X": 0.0,
-          "Y": 3.0
-        }
-      },
-      "59941933": {
-        "Position": {
-          "X": 5.0,
-          "Y": 3.0
-        }
-      },
-      "23458411": {
-        "Position": {
-          "X": 5.0,
-          "Y": 0.0
-        }
+  "Vertices": {
+    "1": {
+      "Position": {
+        "X": 0.0,
+        "Y": 0.0
+      }
+    },
+    "4": {
+      "Position": {
+        "X": 2.0,
+        "Y": 0.0
+      }
+    },
+    "3": {
+      "Position": {
+        "X": 2.0,
+        "Y": 1.0
+      }
+    },
+    "2": {
+      "Position": {
+        "X": 0.0,
+        "Y": 1.0
       }
     }
+  }
 }

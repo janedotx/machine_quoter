@@ -1,15 +1,15 @@
 class Edge
-  attr_reader :center, :vertices, :clockwise_vertex
+  attr_reader :center, :vertices, :clockwise_vertex_id
   attr_accessor :next
   attr_accessor :concave
+  attr_reader :positive_x, :negative_x, :positive_y, :negative_y
 
   def initialize(edge_hash)
-    @circular = edge_hash['Type'] == 'CircularArc'
-    # all id keys will be strings
+    # All id keys will be strings
     @vertices = edge_hash['Vertices'].map { |x| x.to_s }
     if edge_hash['Type'] == 'CircularArc'
-      @clockwise_vertex = edge_hash['ClockwiseFrom'].to_s
-      @center = edge_hash['Center']
+      @clockwise_vertex_id = edge_hash['ClockwiseFrom'].to_s
+      @center = Vertex.new(edge_hash['Center']['X'], edge_hash['Center']['Y'])
     end
   end
 
@@ -17,9 +17,16 @@ class Edge
     !@center.nil?
   end
 
-  def straight_length
-    p1 = vertices[0]
-    p2 = vertices[1]
+  def find_farthest_points(vertices_hash)
+    v_id = vertices.first
+    radius = get_distance(vertices_hash[v_id], center)
+    @positive_x = center.x + radius
+    @positive_y = center.y + radius
+    @negative_x = center.x - radius
+    @negative_y = center.y - radius
+  end
+
+  def get_distance(p1, p2)
     Math.sqrt((p2.x - p1.x)**2 + (p2.y - p1.y)**2)
   end
 
@@ -27,7 +34,7 @@ class Edge
     @length ||= if @circular
         arc_length
       else
-        straight_length
+        get_distance(*vertices)
       end
   end
 
