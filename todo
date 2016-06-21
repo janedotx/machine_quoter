@@ -1,6 +1,0 @@
-validation that edges/vertices are in clockwise order
-i assume one point begins at the origin
-constants should go somewhere better
-
-ids are strings
-coordinates are floats

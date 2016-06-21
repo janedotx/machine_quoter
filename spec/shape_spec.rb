@@ -1,6 +1,4 @@
-require 'awesome_print'
-
-require './plethora'
+require './shape'
 
 describe Shape do
   let(:rectangle) { described_class.new(Fixtures::RECTANGLE_FILE) }
@@ -8,6 +6,7 @@ describe Shape do
   let(:extruded_circle) { described_class.new(Fixtures::EXTRUDED_CIRCLE_FILE) }
   let(:vase) { described_class.new(Fixtures::VASE_FILE) }
   let(:slant) { described_class.new(Fixtures::SLANT_FILE) }
+  let(:icecream) { described_class.new(Fixtures::ICECREAM_FILE) }
 
   describe '.initialize' do
 
@@ -114,6 +113,7 @@ describe Shape do
       rectangle.get_total_costs.should eq 14.1
       vase.get_total_costs.should eq 23.34
       slant.get_total_costs.should eq 98.44
+      icecream.get_total_costs.should eq 24.32
     end
   end
 end

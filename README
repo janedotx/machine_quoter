@@ -1,8 +1,19 @@
 Ruby version: 2.3.1
 
+To run:
+1. ruby plethora.rb [FILE]
+
+To run the tests:
+1. Install Ruby version 2.3.1.
+2. Install bundler: gem install bundler.
+3. cd into the same directory as contains the Gemfile of this project, and then run 'bundle install.'
+4. bundle exec rspec spec
+
+A brief explanation of the mathematical assumptions used:
+
 In order to detect convexity/concavity, I walk the vertices in clockwise order. If, for the current vertex I am on, I am on a
 circular edge, and that edge is drawn in an anti-clockwise direction relative to the clockwise direction I am facing, that
 circular edge must be concave. To facilitate figuring out which direction is clockwise, I assume that one point of the shape is
-at the origin. 
+at the origin. The current clockwise finding logic won't work on all shapes, but it works for the examples I have.
 
 

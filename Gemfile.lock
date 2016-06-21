@@ -1,7 +1,6 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    awesome_print (1.7.0)
     diff-lcs (1.2.5)
     rspec (2.99.0)
       rspec-core (~> 2.99.0)
@@ -16,7 +15,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  awesome_print
   rspec (~> 2.14)
 
 BUNDLED WITH

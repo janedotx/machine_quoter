@@ -24,12 +24,19 @@ class Edge
     !@center.nil?
   end
 
+  # Convenience method. Given one vertex for an edge, get the other vertex.
+  def get_other_vertex(v_id)
+    (vertices - [v_id])[0]
+  end
+
   def set_radius(vertices_hash)
     v_id = vertices.first
     @radius = get_distance(vertices_hash[v_id], center)
   end
 
+  # Rewrite the edge as if the center vertex of a circular arc were the origin.
   def translate_edge(vertices_hash)
+    raise 'not circular enough for this call' if !circular
     v1 = vertices_hash[vertices[0]]
     v2 = vertices_hash[vertices[1]]
     translated_v1 = Vertex.new(v1.x - center.x, v1.y - center.y)
@@ -37,8 +44,9 @@ class Edge
     [translated_v1, translated_v2]
   end
 
-  # Return angle in radians.
+  # Return angle of arc in radians.
   def get_angle(vertices_hash)
+    raise 'not circular enough for this call' if !circular
     t_v1, t_v2 = translate_edge(vertices_hash)
     dot_product = self.class.get_dot_product(t_v1, t_v2)
     origin = Vertex.new(0,0)
@@ -48,6 +56,7 @@ class Edge
     Math.acos(cosine)
   end
 
+  # Get farthest coordinates out from a convex curve.
   def find_farthest_points(vertices_hash)
     @positive_x = center.x + radius
     @positive_y = center.y + radius
@@ -62,11 +71,8 @@ class Edge
 
   def find_arc_length(vertices_hash)
     set_radius(vertices_hash) unless @radius
-    puts 'radius'
-    puts @radius
-    circumference = 2 *PI * @radius
     angle = get_angle(vertices_hash)
-    circumference * (angle / (2 * PI))
+    @radius * angle
   end
 
   def find_length(vertices_hash)
@@ -75,9 +81,5 @@ class Edge
       else
         get_distance(vertices_hash[vertices[0]], vertices_hash[vertices[1]])
       end
-  end
-
-  def get_other_vertex(v_id)
-    (vertices - [v_id])[0]
   end
 end

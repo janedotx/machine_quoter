@@ -1,5 +1,3 @@
-require 'awesome_print'
-
 require './vertex'
 
 describe Vertex do
@@ -8,12 +6,10 @@ describe Vertex do
   let(:v3) { described_class.new(1.0, 1.0) }
 
   describe '.==' do
-
     it 'should work' do
       (v1 == v2).should be_true
       (v1 == v3).should be_false
     end
   end
-
 end
 
