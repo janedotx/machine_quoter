@@ -1,7 +1,8 @@
 Ruby version: 2.3.1
 
 To run:
-1. ruby plethora.rb [FILE]
+1. Install Ruby version 2.3.1.
+2. ruby plethora.rb [FILE]
 
 To run the tests:
 1. Install Ruby version 2.3.1.
