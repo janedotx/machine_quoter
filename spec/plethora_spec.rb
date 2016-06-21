@@ -7,6 +7,7 @@ describe Shape do
   let(:cut_circle) { described_class.new(Fixtures::CUT_CIRCLE_FILE) }
   let(:extruded_circle) { described_class.new(Fixtures::EXTRUDED_CIRCLE_FILE) }
   let(:vase) { described_class.new(Fixtures::VASE_FILE) }
+  let(:slant) { described_class.new(Fixtures::SLANT_FILE) }
 
   describe '.initialize' do
 
@@ -95,11 +96,11 @@ describe Shape do
 
   describe '.get_laser_cutting_cost' do
     it 'should accurately calculate the laser cutting cost' do
-  #    cut_circle.process_edges
-  #    cut_circle.get_laser_cutting_cost.round(2).should eq 2.32
+      cut_circle.process_edges
+      cut_circle.get_laser_cutting_cost.round(2).should eq 2.32
 
-  #    rectangle.process_edges
-  #    rectangle.get_laser_cutting_cost.round(2).should eq 2.24
+      rectangle.process_edges
+      rectangle.get_laser_cutting_cost.round(2).should eq 2.24
 
       vase.process_edges
       vase.get_laser_cutting_cost.round(2).should eq 4.58
@@ -112,6 +113,7 @@ describe Shape do
       cut_circle.get_total_costs.should eq 4.06
       rectangle.get_total_costs.should eq 14.1
       vase.get_total_costs.should eq 23.34
+      slant.get_total_costs.should eq 98.44
     end
   end
 end

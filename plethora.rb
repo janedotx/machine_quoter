@@ -178,6 +178,8 @@ class Shape
         cost += (edge.length / V_MAX) * TIME_COST
       end
     end
+    puts 'laser cost'
+    puts cost
     cost
   end
 

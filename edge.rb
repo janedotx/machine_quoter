@@ -62,6 +62,8 @@ class Edge
 
   def find_arc_length(vertices_hash)
     set_radius(vertices_hash) unless @radius
+    puts 'radius'
+    puts @radius
     circumference = 2 *PI * @radius
     angle = get_angle(vertices_hash)
     circumference * (angle / (2 * PI))
